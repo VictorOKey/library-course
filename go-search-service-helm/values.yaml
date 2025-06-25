@@ -1,0 +1,11 @@
+replicaCount: 1
+
+image:
+  repository: go-search-service
+  tag: latest
+  pullPolicy: Never
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
