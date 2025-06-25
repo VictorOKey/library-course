@@ -24,7 +24,7 @@ func main() {
 		title := c.Query("title")
 		author := c.Query("author")
 
-		resp, err := http.Get("http://dotnetcorelibrary:5096/books")
+		resp, err := http.Get("http://dotnet-library/books")
 		if err != nil {
 			c.JSON(500, gin.H{"error": "Не удалось получить список книг из основного сервиса"})
 			return
