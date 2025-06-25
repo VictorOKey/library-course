@@ -13,5 +13,5 @@ service:
 vault:
   addr: "http://vault.vault:8200"
   role: "webapp"
-  skipVerify: true
+  skipVerify: "true"
   path: "kubernetes"

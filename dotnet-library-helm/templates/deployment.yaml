@@ -26,6 +26,6 @@ spec:
             - containerPort: {{ .Values.service.targetPort }}
           env:
             - name: SECRET_USERNAME
-              value: vault:secret/data/webapp/config#username
+              value: "vault:secret/data/webapp/config#username"
             - name: SECRET_PASSWORD
-              value: vault:secret/data/webapp/config#password
+              value: "vault:secret/data/webapp/config#password"
