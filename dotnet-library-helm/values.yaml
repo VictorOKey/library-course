@@ -8,7 +8,7 @@ image:
 service:
   type: ClusterIP
   port: 80
-  targetPort: 5096
+  targetPort: 8080
 
 vault:
   addr: "http://vault.vault:8200"
