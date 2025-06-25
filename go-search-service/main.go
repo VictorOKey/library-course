@@ -31,6 +31,11 @@ func main() {
 		}
 		defer resp.Body.Close()
 
+		if resp.StatusCode != 200 {
+			c.JSON(500, gin.H{"error": "Основной сервис вернул ошибку", "status": resp.StatusCode})
+			return
+		}
+
 		body, _ := ioutil.ReadAll(resp.Body)
 		var books []Book
 		if err := json.Unmarshal(body, &books); err != nil {

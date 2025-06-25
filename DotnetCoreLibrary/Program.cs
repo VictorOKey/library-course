@@ -172,66 +172,66 @@ app.MapGet("/search", async (string? title, string? author) =>
     }
 });
 //к вспомогательному сервису "статистика" сколько книг всего, сколько в броне, сколько свободных
-app.MapGet("/stats", async () =>
-{
-    try
-    {
-        var response = await httpClient.GetAsync("http://go-stats-service:8081/stats");
-        if (!response.IsSuccessStatusCode)
-            return Results.StatusCode((int)response.StatusCode);
-
-        var content = await response.Content.ReadAsStringAsync();
-        return Results.Content(content, "application/json");
-    }
-    catch
-    {
-        return Results.Problem("Go-сервис статистики недоступен", statusCode: 502);
-    }
-});
-//к вспомогательному сервису "рекомендации" сортировка книг по возрасту пользователя
-app.MapGet("/recommend", async (int userId) =>
-{
-    var url = $"http://go-recommend-service:8082/recommend?userId={userId}";
-    try
-    {
-        var response = await httpClient.GetAsync(url);
-        if (!response.IsSuccessStatusCode)
-            return Results.StatusCode((int)response.StatusCode);
-
-        var content = await response.Content.ReadAsStringAsync();
-        return Results.Content(content, "application/json");
-    }
-    catch
-    {
-        return Results.Problem("Сервис рекомендаций недоступен", statusCode: 502);
-    }
-});
-
-app.Run();
-//для статистики передача данных
-static async Task UpdateStatsAsync(HttpClient httpClient, LibraryRepository repo)
-{
-    var totalBooks = repo.Books.Count;
-    var booksOnLoan = repo.Loans.Count(l => l.DateReturned == null);
-    var booksAvailable = repo.Books.Count(b => b.IsAvailable);
-
-    var stats = new
-    {
-        totalBooks = totalBooks,
-        booksOnLoan = booksOnLoan,
-        booksAvailable = booksAvailable
-    };
-
-    try
-    {
-        await httpClient.PostAsJsonAsync("http://go-stats-service:8081/stats/update", stats);
-    }
-    catch { }
-}
-static int GetUserAge(DateTime birthDate)
-{
-    var today = DateTime.Today;
-    var age = today.Year - birthDate.Year;
-    if (birthDate.Date > today.AddYears(-age)) age--;
-    return age;
-}
+//app.MapGet("/stats", async () =>
+//{
+//    try
+//    {
+//        var response = await httpClient.GetAsync("http://go-stats-service:8081/stats");
+//        if (!response.IsSuccessStatusCode)
+//            return Results.StatusCode((int)response.StatusCode);
+//
+//        var content = await response.Content.ReadAsStringAsync();
+//        return Results.Content(content, "application/json");
+//    }
+//    catch
+//    {
+//        return Results.Problem("Go-сервис статистики недоступен", statusCode: 502);
+//    }
+//});
+////к вспомогательному сервису "рекомендации" сортировка книг по возрасту пользователя
+//app.MapGet("/recommend", async (int userId) =>
+//{
+//    var url = $"http://go-recommend-service:8082/recommend?userId={userId}";
+//    try
+//    {
+//        var response = await httpClient.GetAsync(url);
+//        if (!response.IsSuccessStatusCode)
+//            return Results.StatusCode((int)response.StatusCode);
+//
+//        var content = await response.Content.ReadAsStringAsync();
+//        return Results.Content(content, "application/json");
+//    }
+//    catch
+//    {
+//        return Results.Problem("Сервис рекомендаций недоступен", statusCode: 502);
+//    }
+//});
+//
+//app.Run();
+////для статистики передача данных
+//static async Task UpdateStatsAsync(HttpClient httpClient, LibraryRepository repo)
+//{
+//    var totalBooks = repo.Books.Count;
+//    var booksOnLoan = repo.Loans.Count(l => l.DateReturned == null);
+//    var booksAvailable = repo.Books.Count(b => b.IsAvailable);
+//
+//    var stats = new
+//    {
+//        totalBooks = totalBooks,
+//        booksOnLoan = booksOnLoan,
+//        booksAvailable = booksAvailable
+//    };
+//
+//    try
+//    {
+//        await httpClient.PostAsJsonAsync("http://go-stats-service:8081/stats/update", stats);
+//    }
+//    catch { }
+//}
+//static int GetUserAge(DateTime birthDate)
+//{
+//    var today = DateTime.Today;
+//    var age = today.Year - birthDate.Year;
+//    if (birthDate.Date > today.AddYears(-age)) age--;
+//    return age;
+//}
