@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Chart.Name }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+      annotations:
+        vault.security.banzaicloud.io/vault-addr: "{{ .Values.vault.addr }}"
+        vault.security.banzaicloud.io/vault-role: "{{ .Values.vault.role }}"
+        vault.security.banzaicloud.io/vault-skip-verify: "{{ .Values.vault.skipVerify }}"
+        vault.security.banzaicloud.io/vault-path: "{{ .Values.vault.path }}"
+    spec:
+      serviceAccountName: default
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.service.targetPort }}
+          env:
+            - name: SECRET_USERNAME
+              value: vault:secret/data/webapp/config#username
+            - name: SECRET_PASSWORD
+              value: vault:secret/data/webapp/config#password

@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: vault-test
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: vault-test
+  template:
+    metadata:
+      labels:
+        app: vault-test
+      annotations:
+        vault.security.banzaicloud.io/vault-addr: "http://vault.vault:8200"
+        vault.security.banzaicloud.io/vault-role: "webapp"
+        vault.security.banzaicloud.io/vault-skip-verify: "true"
+        vault.security.banzaicloud.io/vault-path: "kubernetes"
+    spec:
+      serviceAccountName: default
+      containers:
+      - name: alpine
+        image: alpine
+        command: ["sh", "-c", "echo $username && sleep 10000"]
+        env:
+        - name: username
+          value: vault:secret/data/webapp/config#username

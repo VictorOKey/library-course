@@ -1,0 +1,17 @@
+replicaCount: 1
+
+image:
+  repository: dotnet-library
+  tag: latest
+  pullPolicy: Never
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5096
+
+vault:
+  addr: "http://vault.vault:8200"
+  role: "webapp"
+  skipVerify: true
+  path: "kubernetes"
